@@ -9,5 +9,3 @@ genproto:
 .PHONY: genopenapi
 genopenapi:
 	@./scripts/genopenapi.sh
-
-
