@@ -1,7 +1,7 @@
-module github.com/Brucezhuu/goorder/kitchen
+module github.com/Brucezhuu/goorder/internal/kitchen
 
 go 1.22.8
 
 replace (
-	github.com/Brucezhuu/goorder/kitchen => ../kitchen
+	github.com/Brucezhuu/goorder/internal/common => ../common
 )
