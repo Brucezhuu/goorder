@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/Brucezhuu/goorder/internal/common/config"
+	"github.com/Brucezhuu/goorder/internal/common/discovery"
 	"github.com/Brucezhuu/goorder/internal/common/genproto/stockpb"
 	"github.com/Brucezhuu/goorder/internal/common/server"
 	"github.com/Brucezhuu/goorder/internal/stock/ports"
@@ -22,8 +23,16 @@ func main() {
 	serverType := viper.GetString("stock.server-to-run")
 	ctx, cancled := context.WithCancel(context.Background())
 	defer cancled()
-
 	application := service.NewApplication(ctx)
+
+	deregisterFunc, err := discovery.RegisterToConsul(ctx, serviceName)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	defer func() {
+		_ = deregisterFunc()
+	}()
+
 	switch serverType {
 	case "grpc":
 		server.RunGRPCServer(serviceName, func(server *grpc.Server) {
