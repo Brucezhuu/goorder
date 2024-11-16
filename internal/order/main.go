@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/Brucezhuu/goorder/internal/common/config"
+	"github.com/Brucezhuu/goorder/internal/common/discovery"
 	"github.com/Brucezhuu/goorder/internal/common/genproto/orderpb"
 	"github.com/Brucezhuu/goorder/internal/common/server"
 	"github.com/Brucezhuu/goorder/internal/order/ports"
@@ -25,11 +26,18 @@ func main() {
 	defer cancel()
 	application, cleanup := service.NewApplication(ctx)
 	defer cleanup()
+	deregisterFunc, err := discovery.RegisterToConsul(ctx, serviceName)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	defer func() {
+		_ = deregisterFunc()
+	}()
+
 	go server.RunGRPCServer(serviceName, func(server *grpc.Server) {
 		svc := ports.NewGRPCServer(application)
 		orderpb.RegisterOrderServiceServer(server, svc)
 	})
-
 	server.RunHTTPServer(serviceName, func(router *gin.Engine) {
 		ports.RegisterHandlersWithOptions(router, HTTPServer{
 			app: application,
