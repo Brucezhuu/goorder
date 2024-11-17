@@ -5,6 +5,7 @@ import (
 	"github.com/Brucezhuu/goorder/internal/common/config"
 	"github.com/Brucezhuu/goorder/internal/common/discovery"
 	"github.com/Brucezhuu/goorder/internal/common/genproto/stockpb"
+	"github.com/Brucezhuu/goorder/internal/common/logging"
 	"github.com/Brucezhuu/goorder/internal/common/server"
 	"github.com/Brucezhuu/goorder/internal/stock/ports"
 	"github.com/Brucezhuu/goorder/internal/stock/service"
@@ -14,6 +15,7 @@ import (
 )
 
 func init() {
+	logging.Init()
 	if err := config.NewViperConfig(); err != nil {
 		logrus.Fatal(err)
 	}
