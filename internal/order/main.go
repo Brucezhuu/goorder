@@ -5,6 +5,7 @@ import (
 	"github.com/Brucezhuu/goorder/internal/common/config"
 	"github.com/Brucezhuu/goorder/internal/common/discovery"
 	"github.com/Brucezhuu/goorder/internal/common/genproto/orderpb"
+	"github.com/Brucezhuu/goorder/internal/common/logging"
 	"github.com/Brucezhuu/goorder/internal/common/server"
 	"github.com/Brucezhuu/goorder/internal/order/ports"
 	"github.com/Brucezhuu/goorder/internal/order/service"
@@ -15,6 +16,7 @@ import (
 )
 
 func init() {
+	logging.Init()
 	if err := config.NewViperConfig(); err != nil {
 		logrus.Fatal(err)
 	}
@@ -22,10 +24,13 @@ func init() {
 
 func main() {
 	serviceName := viper.GetString("order.service-name")
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
 	application, cleanup := service.NewApplication(ctx)
 	defer cleanup()
+
 	deregisterFunc, err := discovery.RegisterToConsul(ctx, serviceName)
 	if err != nil {
 		logrus.Fatal(err)
@@ -38,6 +43,7 @@ func main() {
 		svc := ports.NewGRPCServer(application)
 		orderpb.RegisterOrderServiceServer(server, svc)
 	})
+
 	server.RunHTTPServer(serviceName, func(router *gin.Engine) {
 		ports.RegisterHandlersWithOptions(router, HTTPServer{
 			app: application,
