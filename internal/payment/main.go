@@ -5,6 +5,7 @@ import (
 	"github.com/Brucezhuu/goorder/internal/common/config"
 	"github.com/Brucezhuu/goorder/internal/common/logging"
 	"github.com/Brucezhuu/goorder/internal/common/server"
+	"github.com/Brucezhuu/goorder/internal/payment/infrastructure/consumer"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -29,6 +30,8 @@ func main() {
 		_ = ch.Close()
 		_ = closeCh()
 	}()
+
+	go consumer.NewConsumer().Listen(ch)
 
 	paymentHandler := NewPaymentHandler()
 	switch serverType {
