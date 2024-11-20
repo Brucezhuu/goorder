@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"github.com/Brucezhuu/goorder/internal/common/config"
 	"github.com/Brucezhuu/goorder/internal/common/discovery"
 	"github.com/Brucezhuu/goorder/internal/common/genproto/stockpb"

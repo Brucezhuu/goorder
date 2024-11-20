@@ -2,6 +2,7 @@ package ports
 
 import (
 	context "context"
+
 	"github.com/Brucezhuu/goorder/internal/common/genproto/stockpb"
 	"github.com/Brucezhuu/goorder/internal/stock/app"
 	"github.com/Brucezhuu/goorder/internal/stock/app/query"
