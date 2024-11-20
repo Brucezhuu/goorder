@@ -2,9 +2,10 @@ package adapters
 
 import (
 	"context"
+	"sync"
+
 	"github.com/Brucezhuu/goorder/internal/common/genproto/orderpb"
 	domain "github.com/Brucezhuu/goorder/internal/stock/domain/stock"
-	"sync"
 )
 
 type MemoryStockRepository struct {

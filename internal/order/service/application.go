@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/Brucezhuu/goorder/internal/common/broker"
 	grpcClient "github.com/Brucezhuu/goorder/internal/common/client"
 	"github.com/Brucezhuu/goorder/internal/common/metrics"

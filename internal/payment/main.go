@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"github.com/Brucezhuu/goorder/internal/common/broker"
 	"github.com/Brucezhuu/goorder/internal/common/config"
 	"github.com/Brucezhuu/goorder/internal/common/logging"

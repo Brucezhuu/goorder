@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/Brucezhuu/goorder/internal/common/metrics"
 	"github.com/Brucezhuu/goorder/internal/stock/adapters"
 	"github.com/Brucezhuu/goorder/internal/stock/app"

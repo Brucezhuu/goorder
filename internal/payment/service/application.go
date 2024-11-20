@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	grpcClient "github.com/Brucezhuu/goorder/internal/common/client"
 	"github.com/Brucezhuu/goorder/internal/common/metrics"
 	"github.com/Brucezhuu/goorder/internal/payment/adapters"
@@ -25,7 +26,7 @@ func NewApplication(ctx context.Context) (app.Application, func()) {
 		_ = closeOrderClient()
 	}
 }
-func newApplication(ctx context.Context, orderGRPC command.OrderService, processor domain.Processor) app.Application {
+func newApplication(_ context.Context, orderGRPC command.OrderService, processor domain.Processor) app.Application {
 	// 这里函数的传参都依赖于接口
 	logger := logrus.NewEntry(logrus.StandardLogger())
 	metricClient := metrics.TodoMetrics{}

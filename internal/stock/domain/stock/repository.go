@@ -3,8 +3,9 @@ package stock
 import (
 	"context"
 	"fmt"
-	"github.com/Brucezhuu/goorder/internal/common/genproto/orderpb"
 	"strings"
+
+	"github.com/Brucezhuu/goorder/internal/common/genproto/orderpb"
 )
 
 type Repository interface {
