@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"github.com/Brucezhuu/goorder/internal/common/broker"
 	"github.com/Brucezhuu/goorder/internal/common/config"
 	"github.com/Brucezhuu/goorder/internal/common/discovery"
 	"github.com/Brucezhuu/goorder/internal/common/genproto/orderpb"
 	"github.com/Brucezhuu/goorder/internal/common/logging"
 	"github.com/Brucezhuu/goorder/internal/common/server"
+	"github.com/Brucezhuu/goorder/internal/order/infrastructure/consumer"
 	"github.com/Brucezhuu/goorder/internal/order/ports"
 	"github.com/Brucezhuu/goorder/internal/order/service"
 	"github.com/gin-gonic/gin"
@@ -39,6 +41,17 @@ func main() {
 		_ = deregisterFunc()
 	}()
 
+	ch, closeCh := broker.Connect(
+		viper.GetString("rabbitmq.user"),
+		viper.GetString("rabbitmq.password"),
+		viper.GetString("rabbitmq.host"),
+		viper.GetString("rabbitmq.port"),
+	)
+	defer func() {
+		_ = ch.Close()
+		_ = closeCh()
+	}()
+	go consumer.NewConsumer(application).Listen(ch)
 	go server.RunGRPCServer(serviceName, func(server *grpc.Server) {
 		svc := ports.NewGRPCServer(application)
 		orderpb.RegisterOrderServiceServer(server, svc)
