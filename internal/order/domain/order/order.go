@@ -2,21 +2,13 @@ package order
 
 import (
 	"fmt"
-
-	"github.com/Brucezhuu/goorder/internal/common/genproto/orderpb"
-	"github.com/pkg/errors"
+	"github.com/Brucezhuu/goorder/internal/order/entity"
 	"github.com/stripe/stripe-go/v80"
+
+	"github.com/pkg/errors"
 )
 
-type Order struct {
-	ID          string
-	CustomerID  string
-	Status      string
-	PaymentLink string
-	Items       []*orderpb.Item
-}
-
-func NewOrder(id, customerID, status, paymentLink string, items []*orderpb.Item) (*Order, error) {
+func NewOrder(id, customerID, status, paymentLink string, items []*entity.Item) (*Order, error) {
 	if id == "" {
 		return nil, errors.New("empty id")
 	}
@@ -38,14 +30,12 @@ func NewOrder(id, customerID, status, paymentLink string, items []*orderpb.Item)
 	}, nil
 }
 
-func (o *Order) ToProto() *orderpb.Order {
-	return &orderpb.Order{
-		ID:          o.ID,
-		CustomerID:  o.CustomerID,
-		Status:      o.Status,
-		Items:       o.Items,
-		PaymentLink: o.PaymentLink,
-	}
+type Order struct {
+	ID          string
+	CustomerID  string
+	Status      string
+	PaymentLink string
+	Items       []*entity.Item
 }
 
 func (o *Order) IsPaid() error {
