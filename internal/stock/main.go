@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/Brucezhuu/goorder/internal/common/tracing"
 
 	"github.com/Brucezhuu/goorder/internal/common/config"
 	"github.com/Brucezhuu/goorder/internal/common/discovery"
@@ -26,6 +27,13 @@ func main() {
 	serverType := viper.GetString("stock.server-to-run")
 	ctx, cancled := context.WithCancel(context.Background())
 	defer cancled()
+
+	shutdown, err := tracing.InitJaegerProvider(viper.GetString("jaeger.url"), serviceName)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	defer shutdown(ctx)
+
 	application := service.NewApplication(ctx)
 
 	deregisterFunc, err := discovery.RegisterToConsul(ctx, serviceName)
