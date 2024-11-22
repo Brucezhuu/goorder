@@ -5,7 +5,7 @@ import (
 	"github.com/Brucezhuu/goorder/internal/common/tracing"
 
 	"github.com/Brucezhuu/goorder/internal/common/broker"
-	"github.com/Brucezhuu/goorder/internal/common/config"
+	_ "github.com/Brucezhuu/goorder/internal/common/config"
 	"github.com/Brucezhuu/goorder/internal/common/logging"
 	"github.com/Brucezhuu/goorder/internal/common/server"
 	"github.com/Brucezhuu/goorder/internal/payment/infrastructure/consumer"
@@ -16,9 +16,6 @@ import (
 
 func init() {
 	logging.Init()
-	if err := config.NewViperConfig(); err != nil {
-		logrus.Fatal(err)
-	}
 }
 
 func main() {
