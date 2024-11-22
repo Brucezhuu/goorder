@@ -30,6 +30,20 @@ func NewOrder(id, customerID, status, paymentLink string, items []*entity.Item) 
 	}, nil
 }
 
+func NewPendingOrder(customerId string, items []*entity.Item) (*Order, error) {
+	if customerId == "" {
+		return nil, errors.New("empty customerID")
+	}
+	if items == nil {
+		return nil, errors.New("empty items")
+	}
+	return &Order{
+		CustomerID: customerId,
+		Status:     "pending",
+		Items:      items,
+	}, nil
+}
+
 type Order struct {
 	ID          string
 	CustomerID  string
