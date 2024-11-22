@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/Brucezhuu/goorder/internal/common/tracing"
 
-	"github.com/Brucezhuu/goorder/internal/common/config"
+	_ "github.com/Brucezhuu/goorder/internal/common/config"
 	"github.com/Brucezhuu/goorder/internal/common/discovery"
 	"github.com/Brucezhuu/goorder/internal/common/genproto/stockpb"
 	"github.com/Brucezhuu/goorder/internal/common/logging"
@@ -18,9 +18,6 @@ import (
 
 func init() {
 	logging.Init()
-	if err := config.NewViperConfig(); err != nil {
-		logrus.Fatal(err)
-	}
 }
 func main() {
 	serviceName := viper.GetString("stock.service-name")
