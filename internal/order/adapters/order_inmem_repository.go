@@ -72,6 +72,7 @@ func (m *MemoryOrderRepository) Update(ctx context.Context, order *domain.Order,
 				return err
 			}
 			m.store[i] = updatedOrder
+			logrus.Debugf("updateOrder: %#v", updatedOrder)
 		}
 	}
 	if !found {
