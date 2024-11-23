@@ -1,6 +1,7 @@
 package common
 
 import (
+	"encoding/json"
 	"github.com/Brucezhuu/goorder/internal/common/tracing"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -24,19 +25,25 @@ func (base *BaseResponse) Response(c *gin.Context, err error, data interface{}) 
 }
 
 func (base *BaseResponse) success(c *gin.Context, data interface{}) {
-	c.JSON(http.StatusOK, response{
+	r := response{
 		Errno:   0,
 		Message: "success",
 		Data:    data,
 		TraceID: tracing.TraceID(c.Request.Context()),
-	})
+	}
+	resp, _ := json.Marshal(r)
+	c.Set("response", string(resp))
+	c.JSON(http.StatusOK, r)
 }
 
 func (base *BaseResponse) error(c *gin.Context, err error) {
-	c.JSON(http.StatusOK, response{
+	r := response{
 		Errno:   2,
 		Message: err.Error(),
 		Data:    nil,
 		TraceID: tracing.TraceID(c.Request.Context()),
-	})
+	}
+	resp, _ := json.Marshal(r)
+	c.Set("response", string(resp))
+	c.JSON(http.StatusOK, r)
 }
