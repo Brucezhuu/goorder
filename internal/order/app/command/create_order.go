@@ -3,11 +3,12 @@ package command
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/Brucezhuu/goorder/internal/order/convertor"
 	"github.com/Brucezhuu/goorder/internal/order/entity"
+	"github.com/pkg/errors"
 	"go.opentelemetry.io/otel"
+	"google.golang.org/grpc/status"
 
 	"github.com/Brucezhuu/goorder/internal/common/broker"
 	"github.com/Brucezhuu/goorder/internal/common/decorator"
@@ -93,7 +94,7 @@ func (c createOrderHandler) Handle(ctx context.Context, cmd CreateOrder) (*Creat
 		Headers:      header,
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "publish event error q.Name=%s", q.Name)
 	}
 	return &CreateOrderResult{OrderID: o.ID}, nil
 }
@@ -105,7 +106,7 @@ func (c createOrderHandler) validate(ctx context.Context, items []*entity.ItemWi
 	items = packItems(items)
 	resp, err := c.stockGRPC.CheckIfItemsInStock(ctx, convertor.NewItemWithQuantityConvertor().EntitiesToProtos(items))
 	if err != nil {
-		return nil, err
+		return nil, status.Convert(err).Err()
 	}
 	return convertor.NewItemConvertor().ProtosToEntities(resp.Items), nil
 }
