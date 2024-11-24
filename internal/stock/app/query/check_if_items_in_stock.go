@@ -5,6 +5,7 @@ import (
 	"github.com/Brucezhuu/goorder/internal/common/handler/redis"
 	"github.com/Brucezhuu/goorder/internal/stock/entity"
 	"github.com/Brucezhuu/goorder/internal/stock/infrastructure/integration"
+	"github.com/pkg/errors"
 	"strings"
 	"time"
 
@@ -58,7 +59,7 @@ var stub = map[string]string{
 
 func (h checkIfItemsInStockHandler) Handle(ctx context.Context, query CheckIfItemsInStock) ([]*entity.Item, error) {
 	if err := lock(ctx, getLockKey(query)); err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "redis lock error: key=%s", getLockKey(query))
 	}
 	defer func() {
 		if err := unlock(ctx, getLockKey(query)); err != nil {
