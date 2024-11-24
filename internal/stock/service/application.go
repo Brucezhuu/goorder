@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/Brucezhuu/goorder/internal/stock/infrastructure/integration"
+	"github.com/Brucezhuu/goorder/internal/stock/infrastructure/persistent"
 
 	"github.com/Brucezhuu/goorder/internal/common/metrics"
 	"github.com/Brucezhuu/goorder/internal/stock/adapters"
@@ -12,7 +13,9 @@ import (
 )
 
 func NewApplication(_ context.Context) app.Application {
-	stockRepo := adapters.NewMemoryStockRepository()
+	//stockRepo := adapters.NewMemoryStockRepository()
+	db := persistent.NewMySQL()
+	stockRepo := adapters.NewMySQLStockRepository(db)
 	stripeAPI := integration.NewStripeAPI()
 	logger := logrus.NewEntry(logrus.StandardLogger())
 	metricsClient := metrics.TodoMetrics{}
