@@ -1,10 +1,11 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"github.com/Brucezhuu/goorder/internal/common"
 	client "github.com/Brucezhuu/goorder/internal/common/client/order"
+	"github.com/Brucezhuu/goorder/internal/common/consts"
+	"github.com/Brucezhuu/goorder/internal/common/handler/errors"
 	"github.com/Brucezhuu/goorder/internal/order/app"
 	"github.com/Brucezhuu/goorder/internal/order/app/command"
 	"github.com/Brucezhuu/goorder/internal/order/app/dto"
@@ -28,9 +29,11 @@ func (H HTTPServer) PostCustomerCustomerIdOrders(c *gin.Context, customerID stri
 		H.Response(c, err, &resp)
 	}()
 	if err := c.ShouldBindJSON(&req); err != nil {
+		err = errors.NewWithError(consts.ErrnoBindRequestsError, err)
 		return
 	}
 	if err = H.validate(req); err != nil {
+		err = errors.NewWithError(consts.ErrnoRequestsValidateError, err)
 		return
 	}
 	r, err := H.app.Commands.CreateOrder.Handle(c.Request.Context(), command.CreateOrder{
@@ -38,6 +41,7 @@ func (H HTTPServer) PostCustomerCustomerIdOrders(c *gin.Context, customerID stri
 		Items:      convertor.NewItemWithQuantityConvertor().ClientsToEntities(req.Items),
 	})
 	if err != nil {
+		//err = errors.NewWithError()
 		return
 	}
 	resp = dto.CreateOrderResponse{
@@ -65,7 +69,7 @@ func (H HTTPServer) GetCustomerCustomerIdOrdersOrderId(c *gin.Context, customerI
 func (H HTTPServer) validate(req client.CreateOrderRequest) error {
 	for _, v := range req.Items {
 		if v.Quantity <= 0 {
-			return errors.New("quantity must be positive")
+			return fmt.Errorf("Quantity must be positive, got %d from %s", v.Quantity, v.Id)
 		}
 	}
 	return nil
