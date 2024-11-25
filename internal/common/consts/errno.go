@@ -5,6 +5,7 @@ const (
 	ErrnoUnknownError          = 1
 	ErrnoBindRequestsError     = 1000
 	ErrnoRequestsValidateError = 1001
+	// ErrnoOrder = 2xxx ?
 )
 
 var ErrMsg = map[int]string{
