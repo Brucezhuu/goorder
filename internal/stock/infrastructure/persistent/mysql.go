@@ -55,3 +55,16 @@ func (d MySQL) BatchGetStockByID(ctx context.Context, productIDs []string) ([]St
 	}
 	return result, nil
 }
+
+func NewMySQLWithDB(db *gorm.DB) *MySQL {
+	return &MySQL{db: db}
+}
+
+func (m *StockModel) BeforeCreate(tx *gorm.DB) (err error) {
+	m.UpdateAt = time.Now()
+	return nil
+}
+
+func (d MySQL) Create(ctx context.Context, create *StockModel) error {
+	return d.db.WithContext(ctx).Create(create).Error
+}
